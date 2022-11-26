@@ -1,10 +1,8 @@
-import type { ApiResponseError, CharacterSchema, Command } from '../@types';
-
-import type { AxiosError } from 'axios';
+import type { CharacterSchema } from 'shared-types';
+import { Command } from '../@types';
 import { SlashCommandBuilder } from '@discordjs/builders';
-import axios from 'axios';
 import { buildCharacterInfoEmbed } from '../utils/info.embed';
-import serviceLogger from '@note-dev-org/service-logger';
+import { handleRequestError } from '../utils/interactions';
 import { wapu } from '../services/wapu';
 
 export const info: Command = {
@@ -29,23 +27,7 @@ export const info: Command = {
       characterData = character;
       isNew = created;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        // API error
-        const { response, name } = error as AxiosError<ApiResponseError>;
-        const content = response?.data.message ? response?.data.message : name;
-
-        await interaction.reply({
-          content,
-          ephemeral: true,
-        });
-        return;
-      }
-
-      serviceLogger.error(error);
-      await interaction.reply({
-        content: 'error',
-        ephemeral: true,
-      });
+      handleRequestError(error, interaction);
       return;
     }
 
