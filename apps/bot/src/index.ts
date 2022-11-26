@@ -2,6 +2,7 @@ import { Client, GatewayIntentBits } from 'discord.js';
 
 import { connectDb } from './services/db';
 import dotenv from 'dotenv';
+import { handleCommandError } from './utils/commands';
 import logger from '@note-dev-org/service-logger';
 import { readCommands } from './read.commands';
 import { registerCommands } from './register.commands';
@@ -40,8 +41,6 @@ const main = async () => {
 
   client.on('ready', async () => {
     logger.info(`Logged in as ${client?.user?.tag}!`);
-
-    // Register commands
     await registerCommands([...commands.values()].map(v => v.data));
   });
 
@@ -54,11 +53,9 @@ const main = async () => {
     try {
       await cmd.execute(interaction);
     } catch (error) {
+      logger.warn('latest cmd.execute error:');
       console.error(error);
-      await interaction.reply({
-        content: 'There was an error while executing this command!',
-        ephemeral: true,
-      });
+      await handleCommandError(error, interaction);
     }
   });
 
