@@ -1,4 +1,4 @@
-import type { CharacterSchema } from '../@types';
+import { CharacterSchema } from 'shared-types';
 import axios from 'axios';
 
 const axiosInstance = axios.create({
