@@ -2,7 +2,7 @@ import { CacheType, ChatInputCommandInteraction } from 'discord.js';
 import { EmbedBuilder, hyperlink } from '@discordjs/builders';
 import { buildAuthor, buildRequestedByFooter } from './embeds';
 
-import { CharacterSchema } from '../@types';
+import { CharacterSchema } from 'shared-types';
 
 export const buildCharacterInfoEmbed = (
   character: CharacterSchema,

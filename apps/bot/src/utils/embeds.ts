@@ -1,5 +1,7 @@
 import { CacheType, ChatInputCommandInteraction } from 'discord.js';
 
+export const BLANK = '\u200B';
+
 export const buildAuthor = (
   interaction: ChatInputCommandInteraction<CacheType>
 ) => {
