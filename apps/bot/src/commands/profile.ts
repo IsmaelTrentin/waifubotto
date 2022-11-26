@@ -126,7 +126,7 @@ export const profile: Command = {
       });
 
       await interaction.editReply(
-        `You favourite character has been set to **${characterData.name}** \`${characterData._id}\``
+        `Your favourite character has been set to **${characterData.name}** \`${characterData._id}\``
       );
 
       return;
