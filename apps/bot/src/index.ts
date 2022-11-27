@@ -6,6 +6,7 @@ import { handleCommandError } from './utils/commands';
 import logger from '@note-dev-org/service-logger';
 import { readCommands } from './read.commands';
 import { registerCommands } from './register.commands';
+import { startJobs } from './start.jobs';
 
 dotenv.config();
 
@@ -36,6 +37,8 @@ const main = async () => {
     logger.error((error as Error).toString(), { at: 'a' });
     process.exit(1);
   }
+
+  startJobs();
 
   client.login(process.env.TOKEN).catch(err => logger.error(err));
 
