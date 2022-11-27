@@ -8,10 +8,17 @@ export const readCommands = async () => {
   const extFilter = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
   const commands = new Collection<string, Command>();
   const commandsPath = path.join(__dirname, 'commands');
+
   let commandFiles: string[] = [];
   try {
-    commandFiles = await fs.readdir(commandsPath);
-    commandFiles = commandFiles.filter(file => file.endsWith(extFilter));
+    const commandDirs = await fs.readdir(commandsPath, { withFileTypes: true });
+    commandFiles = commandDirs
+      .filter(
+        entry =>
+          entry.isDirectory() ||
+          (entry.isFile() && entry.name.endsWith(extFilter))
+      )
+      .map(entry => entry.name);
   } catch (error) {
     logger.error(error);
     return commands;
