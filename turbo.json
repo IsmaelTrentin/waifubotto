@@ -5,8 +5,12 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
-    "bot#build": {
+    "mongo-schemas#build": {
       "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "bot#build": {
+      "dependsOn": ["^build", "mongo-schemas#build"],
       "outputs": ["dist/**"]
     },
     "lint": {
