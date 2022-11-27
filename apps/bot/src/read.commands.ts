@@ -16,7 +16,9 @@ export const readCommands = async () => {
       .filter(
         entry =>
           entry.isDirectory() ||
-          (entry.isFile() && entry.name.endsWith(extFilter))
+          (entry.isFile() &&
+            !entry.name.includes('.d.ts') &&
+            entry.name.endsWith(extFilter))
       )
       .map(entry => entry.name);
   } catch (error) {
