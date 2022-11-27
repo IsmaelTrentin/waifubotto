@@ -38,8 +38,10 @@ export const info: Command = {
     }
 
     const embed = buildCharacterInfoEmbed(characterData, interaction);
-
-    const msg = await interaction.channel?.send({ embeds: [embed] });
+    const msg = await interaction.editReply({
+      content: '📜 Character details:',
+      embeds: [embed],
+    });
     if (msg && isNew) {
       await msg.react('📥');
     }
