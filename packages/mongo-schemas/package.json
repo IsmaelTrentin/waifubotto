@@ -1,10 +1,11 @@
 {
   "name": "mongo-schemas",
   "version": "0.0.1",
-  "main": "./index.ts",
+  "main": "./dist/index.js",
   "types": "./index.ts",
   "license": "MIT",
   "scripts": {
+    "build": "tsc",
     "lint": "TIMING=1 eslint \"**/*.ts*\""
   },
   "devDependencies": {
