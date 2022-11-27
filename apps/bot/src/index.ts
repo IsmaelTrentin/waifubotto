@@ -38,6 +38,7 @@ const main = async () => {
     process.exit(1);
   }
 
+  // test dev branch
   startJobs();
 
   client.login(process.env.TOKEN).catch(err => logger.error(err));
