@@ -3,6 +3,7 @@ import { EmbedBuilder, hyperlink } from 'discord.js';
 import { BLANK } from '../../utils/embeds';
 import { Command } from '../../@types';
 import { User } from '../../models/user';
+import { hyperMalCharacterLink } from '../../utils/characters';
 import { wapu } from '../../services/wapu';
 
 export const profileShow: Command['execute'] = async interaction => {
@@ -50,10 +51,7 @@ export const profileShow: Command['execute'] = async interaction => {
         name: '**Favourite character:**',
         value:
           favourite != null
-            ? hyperlink(
-                favourite.name,
-                `https://myanimelist.net/character/${favourite._id}`
-              )
+            ? hyperMalCharacterLink(favourite)
             : 'Run `/profile set favourite`\nto set your fav character!',
       },
     ]);

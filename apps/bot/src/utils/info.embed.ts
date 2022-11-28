@@ -3,12 +3,13 @@ import { EmbedBuilder, hyperlink } from '@discordjs/builders';
 import { buildAuthor, buildRequestedByFooter } from './embeds';
 
 import { CharacterSchema } from 'shared-types';
+import { malCharacterLink } from './characters';
 
 export const buildCharacterInfoEmbed = (
   character: CharacterSchema,
   interaction: ChatInputCommandInteraction<CacheType>
 ) => {
-  const characterUrl = `https://myanimelist.net/character/${character._id}`;
+  const characterUrl = malCharacterLink(character);
   const title = character.japaneseName
     ? `${character.name} | ${character.japaneseName}`
     : character.name;
