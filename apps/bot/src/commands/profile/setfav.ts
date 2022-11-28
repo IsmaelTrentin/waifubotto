@@ -24,6 +24,10 @@ export const profileSetFav: Command['execute'] = async interaction => {
   let characterData;
   try {
     characterData = await wapu.getCharacter(malid);
+    if (characterData == null) {
+      await interaction.reply(`Character ${malid} not found`);
+      return;
+    }
   } catch (error) {
     handleRequestError(error, interaction);
     return;
