@@ -5,7 +5,7 @@ import { buildCharacterInfoEmbed } from '../utils/info.embed';
 import { handleRequestError } from '../utils/interactions';
 import { wapu } from '../services/wapu';
 
-export const info: Command = {
+const info: Command = {
   data: new SlashCommandBuilder()
     .setName('info')
     .setDescription('Displays character infos')
@@ -17,15 +17,22 @@ export const info: Command = {
         .setRequired(true)
     ),
   execute: async interaction => {
-    const id = interaction.options.getInteger('malid', true);
+    const malid = interaction.options.getInteger('malid', true);
 
     let characterData: CharacterSchema | undefined;
     let isNew = true;
 
     try {
-      const { character, created } = await wapu.getCharacterAndCreated(id || 1);
-      characterData = character;
-      isNew = created;
+      const result = await wapu.getCharacterAndCreated(malid || 1);
+      if (result == null) {
+        await interaction.reply({
+          content: `Character ${malid} not found`,
+          ephemeral: true,
+        });
+        return;
+      }
+      characterData = result.character;
+      isNew = result.created;
     } catch (error) {
       handleRequestError(error, interaction);
       return;
@@ -47,3 +54,5 @@ export const info: Command = {
     }
   },
 };
+
+export default info;

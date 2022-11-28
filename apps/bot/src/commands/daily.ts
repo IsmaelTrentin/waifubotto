@@ -7,14 +7,13 @@ import { UserSchema } from 'shared-types';
 import { hasProfile } from '../utils/interactions';
 import { replyNoProfile } from '../utils/interaction.replies';
 
-export const daily: Command = {
+const daily: Command = {
   data: new SlashCommandBuilder()
     .setName('daily')
     .setDescription('Claim your daily waifu dust'),
   execute: async interaction => {
     const dsid = interaction.user.id;
-    let [isRegistered, user] = await hasProfile(interaction.user.id);
-    const dustAmount = Math.round(Math.random() * 20) + 5;
+    let [isRegistered, user] = await hasProfile(dsid);
 
     if (!isRegistered || user == null) {
       const profileModel = new User({
@@ -23,6 +22,7 @@ export const daily: Command = {
       user = await profileModel.save();
     }
 
+    const dustAmount = Math.round(Math.random() * 20) + 5;
     if (!user.claimedDaily) {
       user
         .$inc('xp', 10)
@@ -78,3 +78,5 @@ export const daily: Command = {
     await interaction.reply({ embeds: [embed] });
   },
 };
+
+export default daily;

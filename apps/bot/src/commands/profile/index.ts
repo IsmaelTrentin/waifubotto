@@ -3,7 +3,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import { profileSetFav } from './setfav';
 import { profileShow } from './show';
 
-export const profile: Command = {
+const profile: Command = {
   data: new SlashCommandBuilder()
     .setName('profile')
     .setDescription('Profile related commands')
@@ -32,5 +32,10 @@ export const profile: Command = {
       await profileSetFav(interaction);
       return;
     }
+
+    // should be unreachable
+    await interaction.reply('Unknown command provided');
   },
 };
+
+export default profile;

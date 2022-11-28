@@ -35,15 +35,12 @@ export const readCommands = async () => {
     const filePath = path.join(commandsPath, file);
     const module = require(filePath);
 
-    // ??? workaround???
-    const cmdName = file.replace(extFilter, '');
-
-    const command = module[cmdName];
+    const command = module['default'];
 
     // Set a new item in the Collection
     // With the key as the command name and the value as the exported module
     commands.set(command.data.name, command);
-    logger.info(`[${i}] ${command.data.name}`, {
+    logger.info(`[${i}] /${command.data.name} (${file})`, {
       at: 'readCommands',
     });
   }
