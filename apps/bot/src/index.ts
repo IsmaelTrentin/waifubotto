@@ -49,17 +49,20 @@ const main = async () => {
   });
 
   client.on('interactionCreate', async interaction => {
-    if (!interaction.isChatInputCommand()) return;
+    if (interaction.isChatInputCommand()) {
+      const cmd = commands.get(interaction.commandName);
+      if (!cmd) return;
 
-    const cmd = commands.get(interaction.commandName);
-    if (!cmd) return;
-
-    try {
-      await cmd.execute(interaction);
-    } catch (error) {
-      logger.warn('latest cmd.execute error:');
-      console.error(error);
-      await handleCommandError(error, interaction);
+      try {
+        await cmd.execute(interaction);
+      } catch (error) {
+        logger.warn('latest cmd.execute error:');
+        console.error(error);
+        await handleCommandError(error, interaction);
+      }
+    } else if (interaction.isButton()) {
+      // await interaction.update('test updte');
+      await interaction.reply('button interaction');
     }
   });
 
