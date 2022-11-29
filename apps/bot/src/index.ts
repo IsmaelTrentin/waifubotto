@@ -46,7 +46,7 @@ const main = async () => {
   }
 
   // test dev branch
-  startJobs();
+  // startJobs();
 
   client.on('ready', async () => {
     logger.info(`Logged in as ${client?.user?.tag}!`);
