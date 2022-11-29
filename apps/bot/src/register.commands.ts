@@ -1,9 +1,9 @@
-import type { CommandData } from './@types';
+import { CommandInteractionData } from './@types';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import logger from '@note-dev-org/service-logger';
 
-export const registerCommands = async (commands: CommandData[]) => {
+export const registerCommands = async (commands: CommandInteractionData[]) => {
   if (process.env.REGISTER_COMMANDS !== 'true') {
     logger.warn(
       `Commands registration disabled. REGISTER_COMMANDS = ${process.env.REGISTER_COMMANDS}`,

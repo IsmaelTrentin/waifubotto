@@ -1,22 +1,27 @@
 import { handleRequestError, hasProfile } from '../../utils/interactions';
 
-import { Command } from '../../@types';
-import { replyNoProfile } from '../../utils/interaction.replies';
+import { CommandInteractionExecute } from '../../@types';
+import { User } from '../../models/user';
 import { wapu } from '../../services/wapu';
 
-export const profileSetFav: Command['execute'] = async interaction => {
+export const profileSetFav: CommandInteractionExecute = async interaction => {
+  await interaction.deferReply();
+
+  const dsid = interaction.user.id;
   const malid = interaction.options.getInteger('malid', true);
-  const [isRegistered, user] = await hasProfile(interaction.user.id);
+  let [isRegistered, user] = await hasProfile(dsid);
 
   if (!isRegistered || user == null) {
-    await replyNoProfile(interaction);
-    return;
+    const profileModel = new User({
+      dsid,
+    });
+    user = await profileModel.save();
   }
+
   if (user.favouriteCharacterId == malid) {
-    await interaction.reply({
+    await interaction.editReply({
       content:
         'This character is already your favourite. Yeah ok we KNOW you love them...',
-      ephemeral: true,
     });
     return;
   }
@@ -24,12 +29,16 @@ export const profileSetFav: Command['execute'] = async interaction => {
   let characterData;
   try {
     characterData = await wapu.getCharacter(malid);
+    if (characterData == null) {
+      await interaction.editReply(`Character ${malid} not found`);
+      return;
+    }
   } catch (error) {
     handleRequestError(error, interaction);
     return;
   }
 
-  await interaction.reply(`Character found! ${characterData.name}`);
+  await interaction.editReply(`Character found! ${characterData.name}`);
   await user.updateOne({
     $set: {
       favouriteCharacterId: characterData._id,

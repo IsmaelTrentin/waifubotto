@@ -4,6 +4,7 @@ import type { LocalCharacterSchema } from 'shared-types';
 
 const options: SchemaOptions = {
   autoCreate: false,
+  _id: false,
 };
 
 export const localCharacterSchema = new Schema<LocalCharacterSchema>(

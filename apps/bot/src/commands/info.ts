@@ -1,11 +1,11 @@
 import type { CharacterSchema } from 'shared-types';
-import { Command } from '../@types';
+import { CommandInteractionHandler } from '../@types';
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { buildCharacterInfoEmbed } from '../utils/info.embed';
+import { buildCharacterInfoEmbed } from '../utils/embeds';
 import { handleRequestError } from '../utils/interactions';
 import { wapu } from '../services/wapu';
 
-export const info: Command = {
+const info: CommandInteractionHandler = {
   data: new SlashCommandBuilder()
     .setName('info')
     .setDescription('Displays character infos')
@@ -17,28 +17,36 @@ export const info: Command = {
         .setRequired(true)
     ),
   execute: async interaction => {
-    const id = interaction.options.getInteger('malid', true);
+    await interaction.deferReply();
+
+    const malid = interaction.options.getInteger('malid', true);
 
     let characterData: CharacterSchema | undefined;
     let isNew = true;
 
     try {
-      const { character, created } = await wapu.getCharacterAndCreated(id || 1);
-      characterData = character;
-      isNew = created;
+      const result = await wapu.getCharacterAndCreated(malid || 1);
+      if (result == null) {
+        await interaction.editReply({
+          content: `Character ${malid} not found`,
+        });
+        return;
+      }
+      characterData = result.character;
+      isNew = result.created;
     } catch (error) {
       handleRequestError(error, interaction);
       return;
     }
 
     if (isNew) {
-      await interaction.reply('📥 Character added to DB!');
+      await interaction.editReply('📥 Character found and added to DB!');
     } else {
-      await interaction.reply('📜 Character details:');
+      await interaction.editReply('🔍 Character found!');
     }
 
     const embed = buildCharacterInfoEmbed(characterData, interaction);
-    const msg = await interaction.editReply({
+    const msg = await interaction.followUp({
       content: '📜 Character details:',
       embeds: [embed],
     });
@@ -47,3 +55,5 @@ export const info: Command = {
     }
   },
 };
+
+export default info;

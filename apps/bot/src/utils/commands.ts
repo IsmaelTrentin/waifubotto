@@ -33,13 +33,15 @@ export const handleCommandError = async (
   }
 
   try {
-    if (interaction.replied) {
+    if (interaction.replied || interaction.deferred) {
       await interaction.editReply(body);
     } else {
       await interaction.reply(body);
     }
   } catch (interactionError) {
-    logger.warn('Could not reply to interaction. Missing permissions?');
+    logger.warn(
+      'Could not reply to interaction. Replied, deferred or Missing permissions?'
+    );
     console.error(interactionError);
   }
 };

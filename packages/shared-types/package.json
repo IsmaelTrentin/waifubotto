@@ -8,6 +8,7 @@
     "lint": "TIMING=1 eslint \"**/*.ts*\""
   },
   "devDependencies": {
+    "discord.js": "^14.6.0",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "tsconfig": "*",

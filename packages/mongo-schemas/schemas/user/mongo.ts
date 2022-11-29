@@ -32,11 +32,7 @@ export const userSchema = new Schema<UserSchema>(
       type: Number,
       required: false,
     },
-    characters: {
-      type: [localCharacterSchema],
-      required: true,
-      default: [],
-    },
+    characters: [localCharacterSchema],
     claimedDaily: {
       type: Boolean,
       required: true,

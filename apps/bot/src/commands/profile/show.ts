@@ -1,11 +1,13 @@
-import { EmbedBuilder, hyperlink } from 'discord.js';
-
 import { BLANK } from '../../utils/embeds';
-import { Command } from '../../@types';
+import { CommandInteractionExecute } from '../../@types';
+import { EmbedBuilder } from 'discord.js';
 import { User } from '../../models/user';
+import { hyperMalCharacterLink } from '../../utils/characters';
 import { wapu } from '../../services/wapu';
 
-export const profileShow: Command['execute'] = async interaction => {
+export const profileShow: CommandInteractionExecute = async interaction => {
+  await interaction.deferReply();
+
   const { id, username } = interaction.user;
   let userProfile = await User.findOne({ dsid: id });
   let created = false;
@@ -50,10 +52,7 @@ export const profileShow: Command['execute'] = async interaction => {
         name: '**Favourite character:**',
         value:
           favourite != null
-            ? hyperlink(
-                favourite.name,
-                `https://myanimelist.net/character/${favourite._id}`
-              )
+            ? hyperMalCharacterLink(favourite)
             : 'Run `/profile set favourite`\nto set your fav character!',
       },
     ]);
@@ -62,5 +61,5 @@ export const profileShow: Command['execute'] = async interaction => {
     embed.setImage(favourite.image);
   }
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.editReply({ embeds: [embed] });
 };
