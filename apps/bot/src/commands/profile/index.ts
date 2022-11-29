@@ -1,9 +1,9 @@
-import { Command } from '../../@types';
+import { CommandInteractionHandler } from '../../@types';
 import { SlashCommandBuilder } from 'discord.js';
 import { profileSetFav } from './setfav';
 import { profileShow } from './show';
 
-const profile: Command = {
+const profile: CommandInteractionHandler = {
   data: new SlashCommandBuilder()
     .setName('profile')
     .setDescription('Profile related commands')
