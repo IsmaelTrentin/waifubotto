@@ -4,14 +4,11 @@ import {
   SlashCommandSubcommandsOnlyBuilder,
 } from '@discordjs/builders';
 
-export type CommandData =
+export type CommandInteractionData =
   | SlashCommandBuilder
   | SlashCommandSubcommandsOnlyBuilder
   | Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>;
 
-export interface Command {
-  data: CommandData;
-  execute: (
-    interaction: ChatInputCommandInteraction<CacheType>
-  ) => Promise<void>;
-}
+export type CommandInteractionExecute = (
+  interaction: ChatInputCommandInteraction<CacheType>
+) => Promise<void>;

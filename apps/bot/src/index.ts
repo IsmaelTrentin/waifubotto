@@ -1,10 +1,12 @@
+import { ButtonInteractionHandler, CommandInteractionHandler } from './@types';
 import { Client, GatewayIntentBits } from 'discord.js';
 
 import { connectDb } from './services/db';
 import dotenv from 'dotenv';
-import { handleCommandError } from './utils/commands';
+import { handleButtonEvent } from './events/handle.button';
+import { handleCommandEvent } from './events/handle.command';
 import logger from '@note-dev-org/service-logger';
-import { readCommands } from './read.commands';
+import { readInteractionHandlers } from './read.interaction.handler';
 import { registerCommands } from './register.commands';
 import { startJobs } from './start.jobs';
 
@@ -29,7 +31,12 @@ const main = async () => {
   const client = new Client({
     intents: [GatewayIntentBits.Guilds],
   });
-  const commands = await readCommands();
+  // const commands = await readCommands();
+  const commands = await readInteractionHandlers<CommandInteractionHandler>(
+    'commands'
+  );
+  const buttonHandlers =
+    await readInteractionHandlers<ButtonInteractionHandler>('buttons');
 
   try {
     await connectDb();
@@ -49,21 +56,11 @@ const main = async () => {
   });
 
   client.on('interactionCreate', async interaction => {
-    if (interaction.isChatInputCommand()) {
-      const cmd = commands.get(interaction.commandName);
-      if (!cmd) return;
+    await handleCommandEvent(interaction, commands);
+  });
 
-      try {
-        await cmd.execute(interaction);
-      } catch (error) {
-        logger.warn('latest cmd.execute error:');
-        console.error(error);
-        await handleCommandError(error, interaction);
-      }
-    } else if (interaction.isButton()) {
-      // await interaction.update('test updte');
-      await interaction.reply('button interaction');
-    }
+  client.on('interactionCreate', async interaction => {
+    await handleButtonEvent(interaction, buttonHandlers);
   });
 
   client.on('error', error => {
