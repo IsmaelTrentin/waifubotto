@@ -1,8 +1,8 @@
-import { ApiResponseError, UserSchema } from 'shared-types';
 import { CacheType, ChatInputCommandInteraction } from 'discord.js';
 import axios, { AxiosError } from 'axios';
 
-import { User } from '../models/user';
+import { ApiResponseError } from 'shared-types';
+import { User } from '../../models/user';
 import logger from '@note-dev-org/service-logger';
 
 export const handleRequestError = async (
@@ -13,20 +13,28 @@ export const handleRequestError = async (
     // API error
     const { response, name } = error as AxiosError<ApiResponseError>;
     const content = response?.data.message ? response?.data.message : name;
-
-    await interaction.reply({
+    const body = {
       content,
       ephemeral: true,
-    });
+    };
+    if (interaction.replied || interaction.deferred) {
+      await interaction.editReply(body);
+    } else {
+      await interaction.reply(body);
+    }
     return;
   }
 
   logger.error(error);
-  await interaction.reply({
+  const body = {
     content: 'An unknown error occured. Sorry!',
     ephemeral: true,
-  });
-  return;
+  };
+  if (interaction.replied || interaction.deferred) {
+    await interaction.editReply(body);
+  } else {
+    await interaction.reply(body);
+  }
 };
 
 export const hasProfile = async (dsid: string) => {
