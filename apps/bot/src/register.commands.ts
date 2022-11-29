@@ -39,6 +39,7 @@ export const registerCommands = async (commands: CommandInteractionData[]) => {
         at: 'registerCommands.catch-put',
       }
     );
+    return;
   }
   logger.info(`Registered application commands in ${Date.now() - t1}ms`, {
     at: 'registerCommands',
