@@ -1,11 +1,11 @@
 import type { CharacterSchema } from 'shared-types';
-import { Command } from '../@types';
+import { CommandInteractionHandler } from '../@types';
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { buildCharacterInfoEmbed } from '../utils/info.embed';
+import { buildCharacterInfoEmbed } from '../utils/embeds';
 import { handleRequestError } from '../utils/interactions';
 import { wapu } from '../services/wapu';
 
-const info: Command = {
+const info: CommandInteractionHandler = {
   data: new SlashCommandBuilder()
     .setName('info')
     .setDescription('Displays character infos')
@@ -17,6 +17,8 @@ const info: Command = {
         .setRequired(true)
     ),
   execute: async interaction => {
+    await interaction.deferReply();
+
     const malid = interaction.options.getInteger('malid', true);
 
     let characterData: CharacterSchema | undefined;
@@ -25,9 +27,8 @@ const info: Command = {
     try {
       const result = await wapu.getCharacterAndCreated(malid || 1);
       if (result == null) {
-        await interaction.reply({
+        await interaction.editReply({
           content: `Character ${malid} not found`,
-          ephemeral: true,
         });
         return;
       }
@@ -39,13 +40,13 @@ const info: Command = {
     }
 
     if (isNew) {
-      await interaction.reply('📥 Character added to DB!');
+      await interaction.editReply('📥 Character found and added to DB!');
     } else {
-      await interaction.reply('📜 Character details:');
+      await interaction.editReply('🔍 Character found!');
     }
 
     const embed = buildCharacterInfoEmbed(characterData, interaction);
-    const msg = await interaction.editReply({
+    const msg = await interaction.followUp({
       content: '📜 Character details:',
       embeds: [embed],
     });
