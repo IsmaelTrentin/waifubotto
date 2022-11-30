@@ -11,11 +11,24 @@ export const buildAuthor = (
   };
 };
 
+export const buildFooter = (
+  interaction: ChatInputCommandInteraction<CacheType>,
+  text: string
+) => {
+  return {
+    text: `${text} ${interaction.user.username}`,
+    icon_url: interaction.user.avatarURL() || undefined,
+  };
+};
+
 export const buildRequestedByFooter = (
   interaction: ChatInputCommandInteraction<CacheType>
 ) => {
-  return {
-    text: `Requested by ${interaction.user.username}`,
-    icon_url: interaction.user.avatarURL() || undefined,
-  };
+  return buildFooter(interaction, 'Requested by');
+};
+
+export const buildClaimedByFooter = (
+  interaction: ChatInputCommandInteraction<CacheType>
+) => {
+  return buildFooter(interaction, 'Claimed by');
 };
