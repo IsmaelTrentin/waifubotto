@@ -8,7 +8,7 @@ import {
   CommandInteractionExecute,
 } from './command.interaction';
 
-export interface InteractionHandler<D = unknown, E = unknown> {
+export interface InteractionHandler<D = never, E = never> {
   data: D;
   execute: E;
 }
