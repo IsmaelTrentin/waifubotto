@@ -6,7 +6,6 @@ import dotenv from 'dotenv';
 import { handleButtonEvent } from './events/handle.button';
 import { handleCommandEvent } from './events/handle.command';
 import logger from '@note-dev-org/service-logger';
-import numeral from 'numeral';
 import { readInteractionHandlers } from './read.interaction.handler';
 import { registerCommands } from './register.commands';
 import { startJobs } from './start.jobs';
@@ -45,8 +44,7 @@ const main = async () => {
     process.exit(1);
   }
 
-  // test dev branch
-  // startJobs();
+  startJobs();
 
   client.on('ready', async () => {
     logger.info(`Logged in as ${client?.user?.tag}!`);
@@ -67,15 +65,15 @@ const main = async () => {
 
   await client.login(process.env.TOKEN).catch(err => logger.error(err));
 
-  setInterval(() => {
-    const { rss, heapTotal } = process.memoryUsage();
-    console.log(
-      'rss',
-      numeral(rss).format('0.000 ib'),
-      'heapTotal',
-      numeral(heapTotal).format('0.000 ib')
-    );
-  }, 5000);
+  // setInterval(() => {
+  //   const { rss, heapTotal } = process.memoryUsage();
+  //   console.log(
+  //     'rss',
+  //     numeral(rss).format('0.000 ib'),
+  //     'heapTotal',
+  //     numeral(heapTotal).format('0.000 ib')
+  //   );
+  // }, 5000);
 };
 
 main().catch(err => logger.error(err));

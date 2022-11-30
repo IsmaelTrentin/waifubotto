@@ -28,20 +28,20 @@ export const listAll: CommandInteractionExecute = async interaction => {
     return;
   }
 
-  const rowOne = new ActionRowBuilder().setComponents(
-    new ButtonBuilder()
-      .setCustomId(BTN_INTERACTIONS_IDS.listall.prev)
-      .setStyle(ButtonStyle.Primary)
-      .setLabel('⬅')
-      .setDisabled(true),
-    new ButtonBuilder()
-      .setCustomId(BTN_INTERACTIONS_IDS.listall.next)
-      .setStyle(ButtonStyle.Primary)
-      .setLabel('➡')
-      .setDisabled(maxPage === 1)
-  );
+  let rowOne: ActionRowBuilder | null = null;
+  if (maxPage > 1) {
+    rowOne = new ActionRowBuilder();
+    rowOne.setComponents(
+      new ButtonBuilder()
+        .setCustomId(BTN_INTERACTIONS_IDS.listall.next)
+        .setStyle(ButtonStyle.Primary)
+        .setLabel('➡')
+        .setDisabled(maxPage === 1)
+    );
+  }
+
   await interaction.editReply({
     embeds: [embed],
-    components: [rowOne as any],
+    components: rowOne ? [rowOne as any] : [],
   });
 };

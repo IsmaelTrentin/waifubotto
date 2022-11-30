@@ -34,7 +34,7 @@ export const getListPage = async (dsid: string, page: number = 1) => {
     user = await profileModel.save();
   }
 
-  const maxPage = Math.round(user.characters.length / MAX_ITEMS_IN_LIST) + 1;
+  const maxPage = Math.floor(user.characters.length / MAX_ITEMS_IN_LIST) + 1;
   const localCharacters = user.characters.slice(
     Math.max(page - 1, 0) * MAX_ITEMS_IN_LIST,
     Math.max(page - 1, 0) * MAX_ITEMS_IN_LIST + MAX_ITEMS_IN_LIST
