@@ -10,8 +10,6 @@ const listAllControls: ButtonInteractionHandler = {
     parent: BTN_INTERACTIONS_IDS.listall.$cmd,
   },
   execute: async interaction => {
-    await interaction.deferUpdate();
-
     const embed = interaction.message.embeds[0];
     const embedAuthor = embed.author;
     const embedFooter = embed.footer;
@@ -30,6 +28,17 @@ const listAllControls: ButtonInteractionHandler = {
     }
 
     const ownerDsId = embedAuthor.iconURL.split('/')[4];
+
+    if (ownerDsId !== interaction.user.id) {
+      await interaction.reply({
+        content: 'You do not own this list',
+        ephemeral: true,
+      });
+      return;
+    }
+
+    await interaction.deferUpdate();
+
     const footerComps = embedFooter.text.split(' ');
     const embedCurrentPage = parseInt(footerComps[footerComps.length - 3]);
     const isNextPageBtn =
